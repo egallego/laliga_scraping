@@ -4,6 +4,9 @@
 # ipython information
 .ipynb_checkpoints
 
+# autoenv information
+.env
+
 # Setuptools distribution folder.
 /dist/
 
