@@ -1,4 +1,4 @@
-# Signal Processing
+# LaLiga_scraping
 
 This repository contains the code to scrap results form spanish la Liga results.
 
