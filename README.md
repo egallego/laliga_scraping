@@ -13,7 +13,10 @@ In a new virtual environment:
 ```
 pip install -r requirements.txt
 ```
-
+## Variable configuration
+```
+export DATABASE_LOGIN="postgresql://<user>:<pw>@<db_url>"
+```
 ## Create tables
 ### table results
 ```
@@ -39,7 +42,7 @@ CREATE TABLE results
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.resultats
+ALTER TABLE results
   OWNER TO <user>;
 ```
 
@@ -59,6 +62,6 @@ CREATE TABLE calendar
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.calendari
+ALTER TABLE calendar
   OWNER TO <user>;
 ```
