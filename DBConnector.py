@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from os import environ
 from pandas import DataFrame, read_sql
 from sqlalchemy import create_engine
@@ -54,8 +56,8 @@ class DBConnector(object):
         """.format(table=self._table)
 
         # Query DB and extract rows number
-        query_result = self.query_DB(query, add_keys=False)
-        rows_number = query_result[0][0]
+        query_result = self.query_DB(query)
+        rows_number = query_result.loc[0, 'count']
 
         return int(rows_number)
 
