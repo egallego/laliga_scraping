@@ -23,10 +23,10 @@ export DATABASE_LOGIN="postgresql://<user>:<pw>@<db_url>"
 CREATE TABLE results
 (
   "id" SERIAL PRIMARY KEY,
-  "temporada" text NOT NULL,
-  "competicio" text NOT NULL,
-  "data" timestamp NOT NULL,
-  "jornada" integer NOT NULL,
+  "season" text NOT NULL,
+  "competition" text NOT NULL,
+  "date" timestamp NOT NULL,
+  "round" integer NOT NULL,
   "local" text NOT NULL,
   "visitant" text NOT NULL,
   "resultat" character(1) NOT NULL,
@@ -42,8 +42,6 @@ CREATE TABLE results
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE results
-  OWNER TO <user>;
 ```
 
 
@@ -52,16 +50,14 @@ ALTER TABLE results
 CREATE TABLE calendar
 (
   "id" SERIAL PRIMARY KEY,
-  "temporada" text NOT NULL,
-  "competicio" text NOT NULL,
-  "jornada" integer NOT NULL,
+  "season" text NOT NULL,
+  "competition" text NOT NULL,
+  "round" integer NOT NULL,
   "local" text NOT NULL,
   "visitant" text NOT NULL,
-  "hora" timestamp NOT NULL
+  "date" timestamp NOT NULL
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE calendar
-  OWNER TO <user>;
 ```
