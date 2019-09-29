@@ -29,7 +29,7 @@ def read_calendar(scraper, season, rnd):
         scraped information for selected round/season
     """
     # request html page
-    page = scraper.read_page({'season': season, 'rnd': rnd}, delay=0.3)
+    page = scraper.read_page({'season': season, 'rnd': rnd}, delay=0.5)
 
     # Extract team_names and format names
     team_names = split_page(page,
@@ -81,7 +81,7 @@ if_exists = 'replace'
 
 for year in range(20, 0, -1):
 
-    season = '20%02d_20%02d' % (year, year - 1)
+    season = '20%02d_20%02d' % (year - 1, year)
 
     print 'Scrapig calendar session %s' % season
 
