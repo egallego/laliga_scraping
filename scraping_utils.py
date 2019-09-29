@@ -27,26 +27,24 @@ def split_page(string, str_pre, str_after, index_keep_after=0, ):
     return list_str
 
 
-def remove_accents(input):
+def remove_spaces(string):
     """
-    Remove accents from a list of strings or a string
+    remove spaces from a string
 
     Parameters
     ----------
-    input: list[str] or str
-        string or list of strings to be examined
+    string: str
+        str containing spaces
 
     Returns
     -------
-    list[str] or str
+    string: str
+        string with spaces removed
     """
-    if isinstance(input, list):
-        return map(remove_accents_str, input)
-    if isinstance(input, str):
-        return remove_accents_str(input)
+    return string.replace(' ', '')
 
 
-def remove_accents_str(string):
+def remove_accents(string):
     """
     remove accents from a string
 
