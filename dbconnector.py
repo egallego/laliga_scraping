@@ -170,3 +170,57 @@ class DBConnector(object):
         Engine = create_engine(self._env)
         data.to_sql(name=self._table, con=Engine, if_exists=if_exists, chunksize=500, index=False)
         Engine.dispose()
+
+
+class DBExplorer(DBConnector):
+
+    def __init__(self, **kwargs):
+        DBConnector.__init__(self, **kwargs)
+
+    def count_games(self, season, rnd, competition):
+        """
+        Count how many games information we have for round
+
+        Parameters
+        ----------
+        season, rnd, competition: str
+            season, round and competition to be studied
+
+        Returns
+        -------
+        count: int
+            number of rows extracted
+        """
+        query = """
+        SELECT count(url)
+        FROM results
+        WHERE season='{season}' and competition='{competition}' and round={rnd}
+        """.format(season=season, competition=competition, rnd=rnd)
+
+        count = self.query_DB(query)
+
+        return count.loc[0, 'count']
+
+    def check_url_present(self, url):
+        """
+        Check if we have that url in the table
+
+        Parameters
+        ----------
+        url: str
+            url to study
+
+        Returns
+        -------
+        url_exist: bool
+            boolean presenting if that url exist
+        """
+        query = """
+        SELECT url
+        FROM results
+        WHERE url = '{url}'
+        """.format(url=url)
+
+        url_exist = not self.query_DB(query).empty
+
+        return url_exist
