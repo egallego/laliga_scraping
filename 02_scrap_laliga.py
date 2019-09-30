@@ -23,7 +23,7 @@ for year in range(18, 14, -1):
     print 'Scrapig %s session %s' % (configuration.competition, season)
 
     for rnd in range(1, 39):
-        if db_object.count_games(season, rnd, configuration.competition) != 10:
+        if db_object.count_games(season, rnd, configuration.competition) != configuration.number_games(rnd):
             print '\tRound %d' % rnd
             extract_competition_information(db_object, game_ref_extractor,
                                             results_extractor, configuration, season, rnd)
