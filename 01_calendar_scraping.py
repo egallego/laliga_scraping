@@ -2,7 +2,7 @@ from datetime import datetime
 from dbconnector import DBConnector
 from os import environ
 from scraper import Scraper
-from scraping_utils import remove_accents, split_page, remove_spaces
+from scraping_utils import remove_accents, split_string_to_list, remove_spaces
 
 import pandas as pd
 
@@ -32,7 +32,7 @@ def read_calendar(scraper, season, rnd):
     page = scraper.read_page({'season': season, 'rnd': rnd}, delay=0.5)
 
     # Extract team_names and format names
-    team_names = split_page(page,
+    team_names = split_string_to_list(page,
                             str_pre='<span class="nombre-equipo" itemprop="name">',
                             str_after='</span>\n')
 
@@ -43,7 +43,7 @@ def read_calendar(scraper, season, rnd):
     games = zip(team_names[::2], team_names[1::2])
 
     # Extract times and format it as datetime
-    times = split_page(page,
+    times = split_string_to_list(page,
                        str_pre='<time itemprop="startDate" content="',
                        str_after='"></time>')
 
