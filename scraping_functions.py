@@ -6,6 +6,7 @@ from string_utils import extract_team_name, correct_name
 import json
 import pandas as pd
 
+
 def get_time_bin_temporal_possession(x, str_pre):
     """
     get time bin of the temporal position
@@ -204,7 +205,7 @@ def extract_information_from_reference(results_extractor, game_ref):
     return information
 
 
-def extract_competition_information(db_object, game_ref_extractor, results_extractor, season, rnd, competition='LaLiga'):
+def extract_competition_information(db_object, game_ref_extractor, results_extractor, config, season, rnd):
     """
     extract competition information
 
@@ -220,29 +221,27 @@ def extract_competition_information(db_object, game_ref_extractor, results_extra
         season to be studied
     rnd: int
         round to be studied
-    competition: str
-        competiton to be studied
-
+    config: object
+        object with the configuration to be scraped
     """
     page = game_ref_extractor.read_page({'season': season, 'rnd': rnd}, delay=0.5)
 
     # Split page looking for links and times
-    sub_part_links = page.split('Consulta el directo</strong>')[1:]
-    sub_part_times = page.split('Consulta el directo</strong>')[:-1]
+    sub_part_links = page.split(config.str_links)[1:]
+    sub_part_times = page.split(config.str_time)[:-1]
 
     if len(sub_part_times) == 0:
         return
 
     # extract links
-    str_pre='<a class="cont-txt-info-evento" href="'
-    str_after='/narracion/">\n<span class="'
-    lambda_game_ref_extractor = lambda x: split_string(x, str_pre=str_pre,str_after=str_after)
+    lambda_game_ref_extractor = lambda x: split_string(x, config.str_extract_links_pre, config.str_extract_links_after)
     game_references = map(lambda_game_ref_extractor, sub_part_links)
 
     # extract times
-    str_pre='<time itemprop="startDate" content="'
-    str_after='"></time>'
-    lambda_time_extractor = lambda x: datetime.strptime(split_string(x, str_pre, str_after)[:-6], '%Y-%m-%dT%H:%M:%S')
+    lambda_time_extractor = lambda x: datetime.strptime(split_string(x,
+                                                                     config.str_extract_times_pre,
+                                                                     config.str_extract_times_after)[:-6],
+                                                        '%Y-%m-%dT%H:%M:%S')
     times = map(lambda_time_extractor, sub_part_times)
 
     games_info = []
@@ -254,12 +253,17 @@ def extract_competition_information(db_object, game_ref_extractor, results_extra
             continue
 
         # get information for that game
-        information = extract_information_from_reference(results_extractor, game_ref)
+        try:
+            information = extract_information_from_reference(results_extractor, game_ref)
+
+        except:
+            print '%s Reference error' % game_ref
+            continue
 
         information['season'] = season
         information['round'] = rnd
         information['date'] = time
-        information['competition'] = competition
+        information['competition'] = config.competition
 
         games_info.append(information)
 
