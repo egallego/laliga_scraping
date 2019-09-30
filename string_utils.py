@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-
+from scraping_utils import split_string
 
 def remove_spaces(string):
     """
