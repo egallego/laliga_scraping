@@ -14,5 +14,6 @@ class LaLigaConfig(object):
         self.str_extract_times_pre = '<time itemprop="startDate" content="'
         self.str_extract_times_after = '"></time>'
 
-    def number_games(self, rnd):
+    @staticmethod
+    def number_games(rnd):
         return 10
