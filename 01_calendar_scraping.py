@@ -4,6 +4,7 @@ from os import environ
 from scraper import Scraper
 from scraping_utils import remove_accents, split_string_to_list, remove_spaces
 
+import argparse
 import pandas as pd
 
 
@@ -33,8 +34,8 @@ def read_calendar(scraper, season, rnd):
 
     # Extract team_names and format names
     team_names = split_string_to_list(page,
-                            str_pre='<span class="nombre-equipo" itemprop="name">',
-                            str_after='</span>\n')
+                                      str_pre='<span class="nombre-equipo" itemprop="name">',
+                                      str_after='</span>\n')
 
     team_names = map(remove_accents, team_names)
     team_names = map(remove_spaces, team_names)
@@ -44,8 +45,8 @@ def read_calendar(scraper, season, rnd):
 
     # Extract times and format it as datetime
     times = split_string_to_list(page,
-                       str_pre='<time itemprop="startDate" content="',
-                       str_after='"></time>')
+                                 str_pre='<time itemprop="startDate" content="',
+                                 str_after='"></time>')
 
     times = map(lambda x: datetime.strptime(x[:-6], '%Y-%m-%dT%H:%M:%S'), times)
 
@@ -77,13 +78,14 @@ scraper = Scraper(url='https://resultados.as.com/resultados/futbol/primera/{seas
 #                           Code
 # ==========================================================================
 
-if_exists = 'replace'
+if __name__ == '__main__':
 
-for year in range(20, 0, -1):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--season", help="Season to extract the data", default='2018_2019')
 
-    season = '20%02d_20%02d' % (year - 1, year)
+    args = parser.parse_args()
 
-    print 'Scrapig calendar session %s' % season
+    print 'Scrapig calendar session %s' % args.season
 
     for rnd in range(1, 39):
 
@@ -91,13 +93,9 @@ for year in range(20, 0, -1):
             print '\tround %d' % rnd
 
         # read calendar info
-        calendar_info = read_calendar(scraper, season, rnd)
+        calendar_info = read_calendar(scraper, args.season, rnd)
 
         # store info to DB
-        db_object.store_values(calendar_info, if_exists=if_exists)
-
-        # apply only replace on the first iteration
-        if if_exists == 'replace':
-            if_exists = 'append'
+        db_object.store_values(calendar_info, if_exists='append')
 
 print 'End'
